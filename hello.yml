@@ -1,5 +1,5 @@
 - name: Hello Ansible
-  hosts: all
+  hosts: box001
   sudo: no
 
   tasks:
