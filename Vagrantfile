@@ -10,10 +10,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "trusty64"
+  config.vm.box = "precise64"
 
   # you can replace box001 with another name
-  config.vm.define 'box001' do |node|
+  config.vm.define 'hello_django' do |node|
     node.vm.provision 'ansible' do |ansible|
       # http://bertvv.github.io/vagrant-presentation/#/vagrant-configuration
       # "define directive is important to make automatic inventory work"
@@ -25,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # config.vm.network "forwarded_port", guest: 80, host: 8080
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.11"
   # config.vm.synced_folder "data", "vagrant_data"
 
   # virtualbox

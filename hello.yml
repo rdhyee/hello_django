@@ -1,5 +1,5 @@
 - name: Hello Ansible
-  hosts: box001
+  hosts: hello_django
   sudo: no
 
   tasks:

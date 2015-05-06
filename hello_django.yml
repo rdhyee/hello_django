@@ -1,0 +1,53 @@
+- name: hello_django setup
+  hosts: hello_django
+  vars:
+    user: "{{ ansible_ssh_user }}"
+  sudo: yes
+
+  pre_tasks:
+  - name: check apt last update
+    stat: path=/var/cache/apt
+    register: apt_cache_stat
+  - name: update apt if needed
+    apt: update_cache=yes
+    when: ansible_date_time.epoch|float - apt_cache_stat.stat.mtime > 60*60*12
+
+  tasks:
+    - name: do apt-get update --fix-missing
+      command: apt-get update --fix-missing
+      
+    - name: installing dependencies
+      apt: pkg={{ item }} update_cache=yes state=present
+      with_items:
+        - git-core
+        - apache2
+        - libapache2-mod-wsgi
+        - mysql-client
+        - python-virtualenv
+        - python-mysqldb
+        - python-lxml
+        - python-dev
+        - libmysqlclient-dev
+        - libxml2-dev
+        - libxslt1-dev
+        - python-setuptools
+        - python-dev
+        - postfix
+      tags: install
+      
+    - name: make {{user}} group
+      group: name={{user}}
+      
+    - name: make {{user}} user 
+      user: name={{user}} shell=/bin/bash group={{user}} generate_ssh_key=yes
+
+
+    - name: turn on ports 22, 80, 443
+      ufw: rule=allow port={{ item }} proto=tcp
+      with_items:
+      - 22
+      - 80
+      - 443    
+
+    - name: enable ufw
+      ufw: state=enabled
