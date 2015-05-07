@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       # I wish I could comment out the following line to allow for
       #  .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
       # to be calculated w/o running any ansible playbook -- but no luck
-      ansible.playbook = 'hello.yml'
+      ansible.playbook = 'hello_django.yml'
     end
   end
 
@@ -37,5 +37,35 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #   vb.customize ["modifyvm", :id, "--memory", "1024"]
   # end
   #
+  
+  config.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 1
+  end
+
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id =  ENV['AWS_ACCESS_KEY_ID']
+    aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+    
+    #aws.region = "us-east-1"
+    #aws.region_config "us-east-1", :ami => "ami-7747d01e"
+    
+    #aws.session_token = ""
+    aws.keypair_name = "ry-laptop"
+
+    # Ubuntu 12.04 LTS Precise
+    # PV EBS-SSD boot
+    # alestic 2015.05.05
+    
+    aws.instance_type="t1.micro"
+    
+    aws.region = "us-east-1"
+    aws.ami = "ami-d8132bb0"
+    
+ 
+    override.vm.box = "dummy"
+    override.ssh.username = "ubuntu"
+    override.ssh.private_key_path = "/Users/raymondyee/.ssh/id_rsa"
+  end
 
 end
